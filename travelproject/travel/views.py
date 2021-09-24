@@ -9,10 +9,14 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
+from django.http import HttpResponse
 from .forms import SignUpForm
 from models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 
+
+def index(request):
+    return HttpResponse("Welcome to Travel Authority!")
 
 def home_view(request):
     return render(request, 'home.html')
