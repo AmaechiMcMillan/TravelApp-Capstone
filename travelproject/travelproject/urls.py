@@ -16,15 +16,17 @@ Including another URLconf
 from django import urls
 from django.contrib import admin
 from django.urls import path, include
-from travel.views import home_view, signup_view
+from travel.views import home_view, signup_view, activate
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name="home"),
     path('signup/', signup_view, name="signup"),
     path('travel/', include('travel.urls')),
+    path('activate/<slug:uidb64>/<slud:token>/', activate, name="activate"),
     path('', RedirectView.as_view(url='travel/', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

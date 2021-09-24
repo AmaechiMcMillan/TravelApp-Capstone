@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from .forms import SignUpForm
-from models import Profile
+from .models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 
 
