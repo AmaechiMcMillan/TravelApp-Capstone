@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime,date,timedelta
-from django.db.models.fields import BLANK_CHOICE_DASH
+from django.db.models.expressions import F
+from django.db.models.fields import BLANK_CHOICE_DASH, CharField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -21,8 +22,7 @@ class Profile(models.Model):
         return self.user.username
 
 class Guest(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     age = models.IntegerField(default=20)
     phone_number = models.CharField(max_length=10)
 
@@ -30,8 +30,7 @@ class Guest(models.Model):
         return self.name
 
 class Hotel(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=10)
     city= models.CharField(max_length=200)
 
@@ -55,7 +54,7 @@ class Room(models.Model):
     def hotel_name(self):
         return self.hotel.name
 
-class Booking(models.Model):
+class HotelBooking(models.Model):
     # guest_name=models.CharField(max_length=200)
     room = models.ForeignKey(Room,on_delete=models.CASCADE)
     guest = models.ForeignKey(Guest,on_delete=models.CASCADE)
@@ -79,9 +78,67 @@ class Booking(models.Model):
                 # return total_cost
                 return total_cost
         else:
-            return 'calculated when checked out'        
+            return 'calculated when checked out'
+
+class Flight(models.Model):
+    name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=10)
+    city= models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class Passenger(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField(default=20)
+    phone_number = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
+
+class Seating(models.Model):
+    flight_no=models.IntegerField(default=101)
+    flight = models.ForeignKey(Hotel,null=True,on_delete=models.CASCADE)
+    seat_type=models.CharField(max_length=200,default='standard')
+    rate = models.FloatField()
+    is_available = models.BooleanField(default=True)
+    no_of_seats = models.IntegerField(default=3)
+
+    def __str__(self):
+        return str(self.flight_no)
+
+
+    def hotel_name(self):
+        return self.flight.name
+
+class FlightBooking(models.Model):
+    flight = models.ForeignKey(Flight,on_delete=models.CASCADE)
+    passenger = models.ForeignKey(Passenger,on_delete=models.CASCADE)
+    seating = models.ForeignKey(Seating,on_delete=models.CASCADE)
+    no_of_passengers = models.IntegerField
+    departing_from = models.CharField(max_length=50)
+    arriving_to = models.CharField(max_length=50)
+    leave_date = models.DateTimeField(default=datetime.now())
+    return_date = models.DateTimeField(default=datetime.now())
+    returning = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.passenger
+
+    def charge(self):
+        if self.returning:
+            if self.arriving_to==self.departing_from:
+                return self.flight.rate
+            else:
+                time_delta = self.departing_from - self.arriving_to
+                total_time = time_delta.days
+                total_cost =total_time*self.flight.rate
+                # return total_cost
+                return total_cost
+        else:
+            return 'calculated when returned'
     
-@receiver(post_save,sender=Booking)
+@receiver(post_save,sender=HotelBooking)
 def  RType(sender, instance, created, **kwargs):
     room = instance.room
     if created:
@@ -90,6 +147,16 @@ def  RType(sender, instance, created, **kwargs):
     if instance.check_out ==True:
         room.is_available=True
     room.save()    
+
+@receiver(post_save,sender=FlightBooking)
+def RType(sender, instance, created, **kwargs):
+    flight = instance.flight
+    if created:
+        flight.is_available = False
+    flight.save()
+    if instance.returning ==True:
+        flight.is_available=True
+    flight.save()
     
 
 
