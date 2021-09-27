@@ -1,0 +1,10 @@
+<form action="{% url 'profile:create_new_profile' %}" method="post">
+    {% csrf_token %}
+    Name:<input type="text" name="name" id="name"><br> 
+    Email:<input type="email" name="email" id="email"><br> 
+    Phone Number:<input type="number" name="phonenumber" id="phonenumber"><br>
+    Address:<input type="text" name="address" id="address"><br> 
+    City:<input type="text" name="city" id="city"><br> 
+    Zip Code:<input type="number" name="zipcode" id="zipcode"><br>
+    Country:<input type="text" name="country" id="country"
+</form>

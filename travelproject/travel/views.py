@@ -9,12 +9,13 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import SignUpForm
 from .models import Profile, HotelBooking, FlightBooking
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView 
 from rest_framework_api_key.permissions import HasAPIKey
+from django.urls import reverse
 
 
 def index(request):
@@ -31,6 +32,8 @@ def index(request):
         'all_flightbookings': all_flightbookings
     }
     return render(request, 'travel/index.html', context)
+
+#def detail(request, profile_id):
 
 def home_view(request):
     return render(request, 'home.html')
@@ -82,4 +85,17 @@ class UserListView(APIView):
 
 #def index(request):
 
-
+def create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name') 
+        email = request.POST.get('email')
+        phone_number = request.POST.get('number')
+        address = request.POST.get('address') 
+        city = request.POST.get('city') 
+        zip_code = request.POST.get('number')
+        country = request.POST.get('country')
+        new_profile = Profile(name=name, email=email, phone_number=phone_number, address=address, city=city, zip_code=zip_code, country=country)
+        new_profile.save()
+        return HttpResponseRedirect(reverse('profiles:index'))
+    else:
+        return render(request, 'profiles/create.html')
