@@ -21,13 +21,13 @@ from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
-from . import views 
+#from . import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('travel/', include('travel.urls')),
     path('', home_view, name="home"),
     path('signup/', signup_view, name="signup"),
-    path('travel/', include('travel.urls')),
-    path('', views.index, name='index'),
-    path('', RedirectView.as_view(url='travel/', permanent=True)),
+    #path('', views.index, name='index'),
+    path('', RedirectView.as_view(url='travel/')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -18,7 +18,19 @@ from rest_framework_api_key.permissions import HasAPIKey
 
 
 def index(request):
-    return HttpResponse("Welcome to Travel Authority!")
+    all_profiles = Profile.objects.all()
+    context = {
+        'all_profiles': all_profiles
+    }
+    all_hotelbookings = HotelBooking.objects.all()
+    context = {
+        'all_hotelbookings': all_hotelbookings
+    }
+    all_flightbookings = FlightBooking.objects.all()
+    context = {
+        'all_flightbookings': all_flightbookings
+    }
+    return render(request, 'travel/index.html', context)
 
 def home_view(request):
     return render(request, 'home.html')
