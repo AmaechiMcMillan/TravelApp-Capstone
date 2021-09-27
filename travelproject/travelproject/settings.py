@@ -141,3 +141,14 @@ REST_FRAMEWORK = {
         "rest_framework_api_key.permissions.HasAPIKey",
     ]
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 3306
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'bobby@didcoding.com'
+DISPLAY_NAME = "Google places API demo email"
+DONOT_REPLY_EMAIL_PASSWORD = 'XXX'
+CURRENT_SITE = "127.0.0.1:8000"
+
+GOOGLE_API_KEY = "AIzaSyDS135J32UedxCBjPWTgOTT3OyqbrJqnro"
