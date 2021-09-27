@@ -82,7 +82,6 @@ class HotelBooking(models.Model):
 
 class Flight(models.Model):
     name = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=10)
     city= models.CharField(max_length=200)
 
     def __str__(self):

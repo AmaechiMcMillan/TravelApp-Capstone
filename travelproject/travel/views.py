@@ -13,6 +13,8 @@ from django.http import HttpResponse
 from .forms import SignUpForm
 from .models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from rest_framework.views import APIView 
+from rest_framework_api_key.permissions import HasAPIKey
 
 
 def index(request):
@@ -63,5 +65,6 @@ def signup_view(request):
     return render(request, 'signup.html', {'form': form})
 
 
-
+class UserListView(APIView):
+    permission_classes = [HasAPIKey]
 
