@@ -147,7 +147,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 3306
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bobby@didcoding.com'
-DISPLAY_NAME = "Google places API demo email"
+DISPLAY_NAME = "Google places API email"
 DONOT_REPLY_EMAIL_PASSWORD = 'XXX'
 CURRENT_SITE = "127.0.0.1:8000"
 

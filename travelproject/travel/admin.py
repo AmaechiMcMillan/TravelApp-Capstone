@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HotelBooking, Profile
+from .models import HotelBooking, UserProfile
 from .models import Guest
 from .models import Hotel
 from .models import Room
@@ -10,7 +10,7 @@ from .models import Seating
 
 
 # Register your models here.
-admin.site.register(Profile)
+admin.site.register(UserProfile)
 admin.site.register(Guest)
 admin.site.register(Hotel)
 admin.site.register(Room)
