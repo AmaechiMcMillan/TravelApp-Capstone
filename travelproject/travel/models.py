@@ -5,30 +5,37 @@ from django.db.models.expressions import F
 from django.db.models.fields import BLANK_CHOICE_DASH, CharField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.timezone import datetime, now
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, blank=True)
-    email = models.EmailField(max_length=50)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
-    address = models.CharField(verbose_name="Address", max_length=100, null=True, blank=True)
-    city = models.CharField(verbose_name="City", max_length=100, null=True, blank=True)
-    zip_code = models.CharField(verbose_name="Zip Code", max_length=5, null=True, blank=True)
-    country = models.CharField(verbose_name="Country", max_length=100, null=True, blank=True)
-    signup_confirmation = models.BooleanField(default=False)
+	
+	updated = models.DateTimeField(auto_now=True)
+	timestamp = models.DateTimeField(auto_now_add=True)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
+	phone_number = models.CharField(max_length=15, null=True, blank=True)
+	address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
+	city = models.CharField(verbose_name="City",max_length=100, null=True, blank=True)
+	zip_code = models.CharField(verbose_name="Zippip Code",max_length=8, null=True, blank=True)
+	country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        return self.user.username
+	longitude = models.CharField(verbose_name="Longitude",max_length=50, null=True, blank=True)
+	latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
+	
+	is_active = models.BooleanField(default = True)
+
+	email_verified = models.BooleanField(default = False)
+	has_profile = models.BooleanField(default=False)
+
+	def __str__(self):
+		return f'{self.user}'
+
 
 class UserToken(models.Model):
 	
 	updated = models.DateTimeField(auto_now=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	token = models.CharField(max_length=100, null=True, blank=True)
-	
-	#used to change the object type
+	token = models.CharField(max_length=100, null=True, blank=True) 
 	is_email = models.BooleanField(default= False)
 	is_password = models.BooleanField(default = False)
 
@@ -178,5 +185,5 @@ def RType(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-    instance.profile.save()
+        UserProfile.objects.create(user=instance)
+    instance.user_profile.save()

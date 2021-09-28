@@ -53,10 +53,6 @@ def index(request):
     }
     return render(request, 'travel/index.html', context)
 
-#def detail(request, profile_id):
-
-def home_view(request):
-    return render(request, 'home.html')
 
 def activate(request, uidb64, token):
     try:
@@ -73,25 +69,6 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'activation_invalid.html')
-
-class UserListView(APIView):
-    permission_classes = [HasAPIKey]
-
-
-def create(request):
-    if request.method == 'POST':
-        name = request.POST.get('name') 
-        email = request.POST.get('email')
-        phone_number = request.POST.get('number')
-        address = request.POST.get('address') 
-        city = request.POST.get('city') 
-        zip_code = request.POST.get('number')
-        country = request.POST.get('country')
-        new_profile = UserProfile(name=name, email=email, phone_number=phone_number, address=address, city=city, zip_code=zip_code, country=country)
-        new_profile.save()
-        return HttpResponseRedirect(reverse('profiles:index'))
-    else:
-        return render(request, 'profiles/create.html')
 
 def sign_up(request):
 	
@@ -129,14 +106,14 @@ def sign_up(request):
 			)
 		
 	context = {'u_form':u_form,}
-	return render(request, 'users/sign_up.html', context)
+	return render(request, 'travel/signup.html', context)
 
 
 def sign_in(request):
 
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('users:account'))
+		return redirect(reverse('travel:account'))
 	
 	a_form = AuthForm()
 	result = "error"
@@ -173,12 +150,12 @@ def sign_in(request):
 		context["token_error"] = "false"
 
 
-	return render(request, 'users/sign_in.html', context)
+	return render(request, 'travel/signin.html', context)
 
 
 def sign_out(request):
 	logout(request)
-	return redirect(reverse('users:sign-in'))
+	return redirect(reverse('travel:sign-in'))
 
 
 def forgotten_password(request):
@@ -232,7 +209,7 @@ def forgotten_password(request):
 			content_type="application/json"
 			)
 	context = {'rp_form':rp_form}
-	return render(request, 'users/forgotten_password.html', context)
+	return render(request, 'travel/forgotten_password.html', context)
 
 
 @login_required

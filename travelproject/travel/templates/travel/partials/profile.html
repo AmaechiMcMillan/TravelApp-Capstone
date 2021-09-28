@@ -1,4 +1,4 @@
-{% extends 'users/base.html' %}
+{% extends 'travel/base.html' %}
 {% load static %}
 
 
@@ -9,9 +9,9 @@
 {% block extend_nav %} 
 
 <ul class="sidenav">
-  <li><a href="{% url 'users:account' %}">User Account</a></li>
-  <li><a class="active" href="{% url 'users:profile' %}">Profile</a></li>
-  <li><a href="{% url 'users:sign-out' %}">Sign out</a></li>
+  <li><a href="{% url 'travel:account' %}">User Account</a></li>
+  <li><a class="active" href="{% url 'travel:profile' %}">Profile</a></li>
+  <li><a href="{% url 'travel:sign-out' %}">Sign out</a></li>
 </ul>
 
 {% endblock %}

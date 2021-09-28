@@ -1,4 +1,4 @@
-{% extends 'users/base.html' %}
+{% extends 'travel/base.html' %}
 {% load static %}
 
 
@@ -10,9 +10,9 @@
 {% block extend_nav %}
 
 <ul class="sidenav">
-  <li><a class="active" href="{% url 'users:sign-in' %}">Sign In</a></li>
-  <li><a href="{% url 'users:sign-up' %}">Sign Up</a></li>
-  <li><a href="{% url 'users:forgotten-password' %}">Forgotten Password</a></li>
+  <li><a class="active" href="{% url 'travel:sign-in' %}">Sign In</a></li>
+  <li><a href="{% url 'travel:sign-up' %}">Sign Up</a></li>
+  <li><a href="{% url 'travel:forgotten-password' %}">Forgotten Password</a></li>
 </ul>
 
 {% endblock %}

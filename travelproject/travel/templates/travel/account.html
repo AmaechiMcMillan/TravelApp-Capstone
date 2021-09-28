@@ -10,9 +10,9 @@
 {% block extend_nav %}
 
 <ul class="sidenav">
-  <li><a class="active" href="{% url 'users:account' %}">Account</a></li>
-  <li><a href="{% url 'users:profile' %}">Profile</a></li>
-  <li><a href="{% url 'users:sign-out' %}">Sign out</a></li>
+  <li><a class="active" href="{% url 'travel:account' %}">Account</a></li>
+  <li><a href="{% url 'travel:profile' %}">Profile</a></li>
+  <li><a href="{% url 'travel:sign-out' %}">Sign out</a></li>
 </ul>
 
 {% endblock %}
@@ -69,7 +69,7 @@
       {% else %}
         <tr>
           <td>User Profile</td>
-          <td><a href="{% url 'users:profile' %}" >Create user Profile</a></td>
+          <td><a href="{% url 'travel:profile' %}" >Create user Profile</a></td>
         </tr>
       {% endif %}
     </tbody>
