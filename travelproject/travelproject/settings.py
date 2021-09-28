@@ -58,7 +58,7 @@ ROOT_URLCONF = 'travelproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'travelapp/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,7 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, "travelapp/build/static")
 ]
 
 STATIC_URL = '/static/'
@@ -161,6 +161,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bobby@didcoding.com'
 DISPLAY_NAME = "Google places API email"
 DONOT_REPLY_EMAIL_PASSWORD = 'XXX'
-CURRENT_SITE = "127.0.0.1:8000"
+CURRENT_SITE = "http://127.0.0.1:8000/"
 
 GOOGLE_API_KEY = "AIzaSyDS135J32UedxCBjPWTgOTT3OyqbrJqnro"

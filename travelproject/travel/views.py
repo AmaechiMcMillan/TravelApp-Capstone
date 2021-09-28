@@ -4,23 +4,22 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
-from django.http import JsonResponse
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.utils.http import urlsafe_base64_decode
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import UserForm, UserProfileForm, ForgottenPasswordForm, AuthForm, RequestPasswordForm
 from .models import UserProfile, HotelBooking, FlightBooking, UserToken
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView 
 from rest_framework_api_key.permissions import HasAPIKey
 from django.urls import reverse
+from .mixins import FormErrors, RedirectParams, TokenGenerator, CreateEmail
 import json
 
 
@@ -74,7 +73,7 @@ def sign_up(request):
 	
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('users:account'))
+		return redirect(reverse('travel:account'))
 
 	u_form = UserForm()
 	result = "error"
@@ -321,7 +320,7 @@ def verification(request, uidb64, token):
 	except(TypeError, ValueError, OverflowError, User.DoesNotExist, UserToken.DoesNotExist):
 
 		#user our RedirectParams function to redirect & append 'token_error' parameter to fire an error message
-		return RedirectParams(url = 'users:sign-in', params = {"token_error": "true"})
+		return RedirectParams(url = 'travel:sign-in', params = {"token_error": "true"})
 
 	#if User & UserToken exist...
 	if user and ut:
@@ -341,7 +340,7 @@ def verification(request, uidb64, token):
 			login(request, user)
 
 			#user our RedirectParams function to redirect & append 'verified' parameter to fire a success message
-			return RedirectParams(url = 'users:account', params = {"verified": "true"})
+			return RedirectParams(url = 'travel:account', params = {"verified": "true"})
 		
 		# else the token is a password token 
 		else:
@@ -372,4 +371,4 @@ def verification(request, uidb64, token):
 					content_type="application/json"
 					)
 			context = {'fp_form':fp_form, "uidb64":uidb64, "token":token}
-			return render(request, 'users/verification.html', context)
+			return render(request, 'travel/verification.html', context)

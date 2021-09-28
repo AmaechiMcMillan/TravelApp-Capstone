@@ -14,11 +14,10 @@
           {% block sidebar %}
             <ul class="sidebar-nav">
               <li><a href="{% url 'index' %}">Home</a></li>
-              <li><a href="">Sign up/Login</a></li>
-              <li><a href="">Plan trip</a></li>
-              <li><a href="">Book hotel</a></li>
-              <li><a href="">Book flight</a></li>
-              <li><a href="">View trip</a></li>
+              <li><a href="{% url 'plan trip' %}">Plan trip</a></li>
+              <li><a href="{% url 'book hotel' %}">Book hotel</a></li>
+              <li><a href="{% url 'book flight' %}">Book flight</a></li>
+              <li><a href="{% url 'view trip' %}">View trip</a></li>
             </ul>
          {% endblock %}
           </div>

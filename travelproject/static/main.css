@@ -20,7 +20,7 @@ ul.sidenav {
   margin: 0;
   padding: 0;
   width: 25%;
-  background-color: #f1f1f1;
+  background-color: #D8DFE9;
   position: fixed;
   height: 100%;
   overflow: auto;
@@ -34,12 +34,12 @@ ul.sidenav li a {
 }
 
 ul.sidenav li a.active {
-  background-color: #9c07b6;
+  background-color: #689368;
   color: white;
 }
 
 ul.sidenav li a:hover:not(.active) {
-  background-color: #555;
+  background-color: #022831;
   color: white;
 }
 
@@ -51,7 +51,7 @@ ul.sidenav li a:hover:not(.active) {
 }
 .container {
   border-radius: 5px;
-  background-color: #f2f2f2;
+  background-color: #D8DFE9;
   padding: 20px;
 }
 
@@ -80,7 +80,7 @@ ul.sidenav li a:hover:not(.active) {
 input[type=text], input[type=email], input[type=password], select, textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #04566E;
   border-radius: 4px;
   box-sizing: border-box;
   margin-top: 6px;
@@ -90,28 +90,28 @@ input[type=text], input[type=email], input[type=password], select, textarea {
 
 
 ::-webkit-input-placeholder { /* Edge */
-  color: #9c07b6;
+  color: #D5603F;
   font-family: 'Courier Prime', monospace;
 }
 
 :-ms-input-placeholder { /* Internet Explorer */
-  color: #9c07b6;
+  color: #D5603F;
   font-family: 'Courier Prime', monospace;
 }
 
 ::placeholder {
-  color: #9c07b6;
+  color: #D5603F;
   font-family: 'Courier Prime', monospace;
 }
 
-select.selection option,
+select.selection option
 {
-  color: #9c07b6;
+  color: #D5603F;
   font-family: 'Courier Prime', monospace;
 }
 
 input, select{
-  color: #9c07b6;
+  color: #D5603F;
   font-family: 'Courier Prime', monospace;
 
 }
@@ -155,7 +155,7 @@ input, select{
 
 /* When the checkbox is checked, add a green background */
 .check-container input:checked ~ .checkmark {
-  background-color: #9c07b6;
+  background-color: #D5603F;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -223,11 +223,11 @@ input, select{
 }
 
 input:checked + .slider {
-  background-color: #9c07b6;
+  background-color: #D5603F;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #9c07b6;
+  box-shadow: 0 0 1px #D5603F;
 }
 
 input:checked + .slider:before {
@@ -246,7 +246,7 @@ input:checked + .slider:before {
 }
 
 button[type=submit] {
-  background-color: #9c07b6;
+  background-color: #D5603F;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -255,7 +255,7 @@ button[type=submit] {
 }
 
 button[type=submit]:hover {
-  background-color: #730786;
+  background-color: #8E3A52;
 }
 
 
@@ -277,12 +277,12 @@ table th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #9c07b6;
+  background-color: #D5603F;
   color: white;
 }
 
 .selected {
-  background-color: #730786;
+  background-color: #8E3A52;
   color: #FFF;
 }
 
