@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'travel.apps.TravelConfig',
     'rest_framework',
-    'corsheaders',
+    #'corsheaders',
     'rest_framework_api_key',
 ]
 

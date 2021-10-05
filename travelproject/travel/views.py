@@ -7,13 +7,14 @@ from django.contrib.sites.shortcuts import get_current_site
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.db import IntegrityError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import UserForm, TravelProfileForm, ForgottenPasswordForm, AuthForm, RequestPasswordForm
-from .models import TravelProfile, HotelBooking, FlightBooking, UserToken, Guest, Hotel, Room, Flight, Passenger, Seating
+from .models import UserToken
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .mixins import FormErrors, RedirectParams, TokenGenerator, CreateEmail
@@ -31,7 +32,7 @@ def sign_up(request):
 	
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('users:account'))
+		return redirect(reverse('travel:account'))
 
 	u_form = UserForm()
 	result = "error"
@@ -63,7 +64,7 @@ def sign_up(request):
 			)
 		
 	context = {'u_form':u_form,}
-	return render(request, 'users/sign_up.html', context)
+	return render(request, 'travel/sign_up.html', context)
 
 
 
@@ -75,7 +76,7 @@ def sign_in(request):
 
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('users:account'))
+		return redirect(reverse('travel:account'))
 	
 	a_form = AuthForm()
 	result = "error"
@@ -112,7 +113,7 @@ def sign_in(request):
 		context["token_error"] = "false"
 
 
-	return render(request, 'users/sign_in.html', context)
+	return render(request, 'travel/sign_in.html', context)
 
 
 
@@ -122,7 +123,7 @@ Basic view for user sign out
 '''
 def sign_out(request):
 	logout(request)
-	return redirect(reverse('users:sign-in'))
+	return redirect(reverse('travel:sign-in'))
 
 
 
@@ -181,7 +182,7 @@ def forgotten_password(request):
 			content_type="application/json"
 			)
 	context = {'rp_form':rp_form}
-	return render(request, 'users/forgotten_password.html', context)
+	return render(request, 'travel/forgotten_password.html', context)
 
 
 
@@ -200,7 +201,7 @@ def account(request):
 	else:
 		context["verified"] = "false"
 
-	return render(request,'users/account.html', context)
+	return render(request,'travel/account.html', context)
 
 
 
@@ -211,18 +212,18 @@ Profile view for registered users
 @login_required
 def profile(request):
 	
-	up_form = UserProfileForm(instance=request.user.userprofile)
+	up_form = TravelProfileForm(instance=request.user.travelprofile)
 	result = "error"
 	message = "Something went wrong. Please check and try again"
 
 	if request.is_ajax() and request.method == "POST":
-		up_form = UserProfileForm(data = request.POST, instance=request.user.userprofile)
+		up_form = TravelProfileForm(data = request.POST, instance=request.user.travelprofile)
 		
 		#if both forms are valid, do something
 		if up_form.is_valid():
 			user = up_form.save()
 
-			up = request.user.userprofile
+			up = request.user.travelprofile
 			up.has_profile = True
 			up.save()
 
@@ -242,7 +243,7 @@ def profile(request):
 		'up_form':up_form,
 		'google_api_key': settings.GOOGLE_API_KEY
 		}
-	return render(request, 'users/profile.html', context)
+	return render(request, 'travel/profile.html', context)
 
 
 
@@ -314,7 +315,7 @@ def verification(request, uidb64, token):
 	except(TypeError, ValueError, OverflowError, User.DoesNotExist, UserToken.DoesNotExist):
 
 		#user our RedirectParams function to redirect & append 'token_error' parameter to fire an error message
-		return RedirectParams(url = 'users:sign-in', params = {"token_error": "true"})
+		return RedirectParams(url = 'travel:sign-in', params = {"token_error": "true"})
 
 	#if User & UserToken exist...
 	if user and ut:
@@ -326,7 +327,7 @@ def verification(request, uidb64, token):
 			ut.is_active = False
 			ut.save()
 
-			up = user.userprofile
+			up = user.travelprofile
 			up.email_verified = True
 			up.save()
 						
@@ -365,4 +366,4 @@ def verification(request, uidb64, token):
 					content_type="application/json"
 					)
 			context = {'fp_form':fp_form, "uidb64":uidb64, "token":token}
-			return render(request, 'users/verification.html', context)
+			return render(request, 'travel/verification.html', context)

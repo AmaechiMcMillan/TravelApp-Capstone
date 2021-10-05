@@ -138,7 +138,7 @@ class FlightBooking(models.Model):
     passenger = models.ForeignKey(Passenger,on_delete=models.CASCADE)
     seating = models.ForeignKey(Seating,on_delete=models.CASCADE)
     no_of_passengers = models.IntegerField
-    departing_to = models.CharField(max_length=50)
+    departing_from = models.CharField(max_length=50)
     arriving_to = models.CharField(max_length=50)
     leave_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
     return_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))

@@ -22,11 +22,11 @@ from travel import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('travel/', include('travel.urls')),
+    path('', include('travel.urls')),
+    #path('travel/', include('travel.urls')),
     path('travel/login', include('travel.urls', namespace='login')),
     path('travel/plan_trip', include('travel.urls', namespace='plan_trip')),
     path('travel/overview', include('travel.urls', namespace='overview')),
-    path('', include('travel.urls')),
 ] 
 
 if settings.DEBUG:

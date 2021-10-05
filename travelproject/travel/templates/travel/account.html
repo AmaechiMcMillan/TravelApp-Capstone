@@ -36,7 +36,7 @@
       <tr>
         <td>Username</td>
 
-          {% if request.user.userprofile.email_verified %}
+          {% if request.user.travelprofile.email_verified %}
             <td>{{request.user.username}} <b style="color:green">(verified)</b></td>
           {% else %}
             <td>{{request.user.username}} <a href="javascript:void(0)" onclick="EmailVerification()"><b style="color:red">(please verify)</b></a></td>
@@ -48,20 +48,20 @@
       </tr>
 
 
-      {% if request.user.userprofile.has_profile %}
+      {% if request.user.travelprofile.has_profile %}
 
         <tr>
           <td>Telephone</td>
-          <td>{{request.user.userprofile.telephone}}</td>     
+          <td>{{request.user.travelprofile.telephone}}</td>     
         </tr>
         <tr>
           <td>Address</td>
           <td>
             <address>
-              {{request.user.userprofile.address}}<br>
-              {{request.user.userprofile.town}}<br>
-              {{request.user.userprofile.county}}<br>
-              {{request.user.userprofile.post_code}}<br>
+              {{request.user.travelprofile.address}}<br>
+              {{request.user.travelprofile.city}}<br>
+              {{request.user.travelprofile.country}}<br>
+              {{request.user.travelprofile.zip_code}}<br>
             </address>
           </td>      
         </tr>
