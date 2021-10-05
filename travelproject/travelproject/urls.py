@@ -19,11 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from travel import views 
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('travel.urls')),
-    #path('travel/', include('travel.urls')),
+    path('', TemplateView.as_view(template_name='index.html')),
     path('travel/login', include('travel.urls', namespace='login')),
     path('travel/plan_trip', include('travel.urls', namespace='plan_trip')),
     path('travel/overview', include('travel.urls', namespace='overview')),
