@@ -29,7 +29,6 @@ def RedirectParams(**kwargs):
 	return response
 
 
-# DOCS - https://docs.djangoproject.com/en/3.1/topics/auth/default/
 class TokenGenerator(PasswordResetTokenGenerator):
 	
 	def _make_hash_value(self, user, timestamp):
@@ -41,7 +40,6 @@ class TokenGenerator(PasswordResetTokenGenerator):
 			)
 
 
-# DOCS - https://docs.djangoproject.com/en/3.1/topics/email/
 class CreateEmail:
 
 	def __init__(self, request, *args, **kwargs):
@@ -77,8 +75,8 @@ class CreateEmail:
 		}
 
 
-		html_content = render_to_string(self.template, context ) # render with dynamic value
-		text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
+		html_content = render_to_string(self.template, context ) 
+		text_content = strip_tags(html_content) 
 
 		with get_connection(
 			    host= settings.EMAIL_HOST, 

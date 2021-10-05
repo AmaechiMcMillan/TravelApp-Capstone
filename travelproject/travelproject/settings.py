@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SECURE_SSL_REDIRECT = True
+
 
 # Application definition
 
@@ -40,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'travel.apps.TravelConfig',
     'rest_framework',
-    'rest_framework_api_key'
+    'corsheaders',
+    'rest_framework_api_key',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +56,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#CORS_ORIGIN_WHITELIST = [
+#    "http://127.0.0.1:8000/",
+#]
 
 ROOT_URLCONF = 'travelproject.urls'
 
@@ -158,9 +166,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 3306
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'bobby@didcoding.com'
+EMAIL_HOST_USER = 'amaechimcmillan@gmail.com'
 DISPLAY_NAME = "Google places API email"
 DONOT_REPLY_EMAIL_PASSWORD = 'XXX'
 CURRENT_SITE = "http://127.0.0.1:8000/"
 
 GOOGLE_API_KEY = "AIzaSyDS135J32UedxCBjPWTgOTT3OyqbrJqnro"
+
+try: 
+    from travelproject.local_settings import *
+except ImportError:
+    pass

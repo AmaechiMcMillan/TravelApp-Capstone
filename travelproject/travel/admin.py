@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HotelBooking, UserProfile, UserToken
+from .models import HotelBooking, TravelProfile, UserToken
 from .models import Guest
 from .models import Hotel
 from .models import Room
@@ -20,11 +20,11 @@ admin.site.register(Passenger)
 admin.site.register(Seating)
 
 
-#class UserProfileAdmin(admin.ModelAdmin):
-    #list_display = ('id', 'user', 'timestamp')
-admin.site.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'timestamp')
+admin.site.register(TravelProfile)
 
 
-#class UserTokenAdmin(admin.ModelAdmin):
-    #list_display = ('id', 'user', 'timestamp')
+class UserTokenAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'timestamp')
 admin.site.register(UserToken)

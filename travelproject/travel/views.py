@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, reverse 
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
@@ -13,67 +12,26 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import UserForm, UserProfileForm, ForgottenPasswordForm, AuthForm, RequestPasswordForm
-from .models import UserProfile, HotelBooking, FlightBooking, UserToken
+from .forms import UserForm, TravelProfileForm, ForgottenPasswordForm, AuthForm, RequestPasswordForm
+from .models import TravelProfile, HotelBooking, FlightBooking, UserToken, Guest, Hotel, Room, Flight, Passenger, Seating
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework.views import APIView 
-from rest_framework_api_key.permissions import HasAPIKey
 from django.urls import reverse
 from .mixins import FormErrors, RedirectParams, TokenGenerator, CreateEmail
 import json
+from .serializers import FlightBookingSerializer, FlightSerializer, GuestSerializer, TravelProfileSerializer, HotelBookingSerializer, FlightBookingSerializer, GuestSerializer, HotelSerializer, RoomSerializer, FlightSerializer, PassengerSerializer, SeatingSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
-def index(request):
-    all_userprofiles = UserProfile.objects.all()
-    context = {
-        'all_profiles': all_userprofiles
-    }
-    #all_hotelbookings = HotelBooking.objects.all()
-    #context = {
-    #    'all_hotelbookings': all_hotelbookings
-    #}
-    #all_flightbookings = FlightBooking.objects.all()
-    #context = {
-    #    'all_flightbookings': all_flightbookings
-    #}
-    return render(request, 'travel/index.html', context)
-
-def index(request):
-    all_hotelbookings = HotelBooking.objects.all()
-    context = {
-        'all_hotelbookings': all_hotelbookings
-    }
-    return render(request, 'travel/index.html', context)
-
-def index(request):
-    all_flightbookings = FlightBooking.objects.all()
-    context = {
-        'all_flightbookings': all_flightbookings
-    }
-    return render(request, 'travel/index.html', context)
-
-
-def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.profile.signup_confirmation = True
-        user.save()
-        login(request, user)
-        return redirect('home')
-    else:
-        return render(request, 'activation_invalid.html')
-
+'''
+Basic view for user sign up
+'''
 def sign_up(request):
 	
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('travel:account'))
+		return redirect(reverse('users:account'))
 
 	u_form = UserForm()
 	result = "error"
@@ -105,14 +63,19 @@ def sign_up(request):
 			)
 		
 	context = {'u_form':u_form,}
-	return render(request, 'travel/signup.html', context)
+	return render(request, 'users/sign_up.html', context)
 
 
+
+
+'''
+Basic view for user sign in
+'''
 def sign_in(request):
 
 	#redirect if user is already signed in
 	if request.user.is_authenticated:
-		return redirect(reverse('travel:account'))
+		return redirect(reverse('users:account'))
 	
 	a_form = AuthForm()
 	result = "error"
@@ -149,14 +112,24 @@ def sign_in(request):
 		context["token_error"] = "false"
 
 
-	return render(request, 'travel/signin.html', context)
+	return render(request, 'users/sign_in.html', context)
 
 
+
+
+'''
+Basic view for user sign out
+'''
 def sign_out(request):
 	logout(request)
-	return redirect(reverse('travel:sign-in'))
+	return redirect(reverse('users:sign-in'))
 
 
+
+
+'''
+Basic view for users to request a new password
+'''
 def forgotten_password(request):
 
 	rp_form = RequestPasswordForm()
@@ -208,9 +181,14 @@ def forgotten_password(request):
 			content_type="application/json"
 			)
 	context = {'rp_form':rp_form}
-	return render(request, 'travel/forgotten_password.html', context)
+	return render(request, 'users/forgotten_password.html', context)
 
 
+
+
+'''
+Account view for registered users
+'''
 @login_required
 def account(request):
 
@@ -225,6 +203,11 @@ def account(request):
 	return render(request,'users/account.html', context)
 
 
+
+
+'''
+Profile view for registered users
+'''
 @login_required
 def profile(request):
 	
@@ -262,6 +245,11 @@ def profile(request):
 	return render(request, 'users/profile.html', context)
 
 
+
+
+'''
+AJAX function to request email view for registered users
+'''
 @login_required
 def email(request):
 	
@@ -308,6 +296,12 @@ def email(request):
 		content_type="application/json"
 		)
 
+
+
+
+'''
+Function view to handle verification tokens
+'''
 def verification(request, uidb64, token):
 
 	try:
@@ -320,7 +314,7 @@ def verification(request, uidb64, token):
 	except(TypeError, ValueError, OverflowError, User.DoesNotExist, UserToken.DoesNotExist):
 
 		#user our RedirectParams function to redirect & append 'token_error' parameter to fire an error message
-		return RedirectParams(url = 'travel:sign-in', params = {"token_error": "true"})
+		return RedirectParams(url = 'users:sign-in', params = {"token_error": "true"})
 
 	#if User & UserToken exist...
 	if user and ut:
@@ -340,7 +334,7 @@ def verification(request, uidb64, token):
 			login(request, user)
 
 			#user our RedirectParams function to redirect & append 'verified' parameter to fire a success message
-			return RedirectParams(url = 'travel:account', params = {"verified": "true"})
+			return RedirectParams(url = 'users:account', params = {"verified": "true"})
 		
 		# else the token is a password token 
 		else:
@@ -371,4 +365,4 @@ def verification(request, uidb64, token):
 					content_type="application/json"
 					)
 			context = {'fp_form':fp_form, "uidb64":uidb64, "token":token}
-			return render(request, 'travel/verification.html', context)
+			return render(request, 'users/verification.html', context)

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm 
-from .models import UserProfile, UserToken
+from .models import TravelProfile, UserToken
 
 class UserForm(UserCreationForm):
 	first_name = forms.CharField(max_length=30, required=True,
@@ -34,10 +34,11 @@ class AuthForm(AuthenticationForm):
 
 
 
-class UserProfileForm(forms.ModelForm):
+class TravelProfileForm(forms.ModelForm):
 
 	phone_number = forms.CharField(max_length=15, required=True,
 		widget=forms.TextInput(attrs={'placeholder': '*Phone Number..'}))
+	dob = forms.DateField()
 	address = forms.CharField(max_length=100, required=True, widget = forms.HiddenInput())
 	city = forms.CharField(max_length=100, required=True, widget = forms.HiddenInput())
 	zip_code = forms.CharField(max_length=8, required=True, widget = forms.HiddenInput())
@@ -47,8 +48,8 @@ class UserProfileForm(forms.ModelForm):
 
 
 	class Meta:
-		model = UserProfile
-		fields = ('phone_number', 'address', 'city', 'zip_code', 'country', 'longitude', 'latitude')
+		model = TravelProfile
+		fields = ('phone_number', 'dob', 'address', 'city', 'zip_code', 'country', 'longitude', 'latitude')
 
 
 

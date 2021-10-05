@@ -1,33 +1,34 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime,date,timedelta
+from datetime import datetime,date,timedelta, timezone
 from django.db.models.expressions import F
 from django.db.models.fields import BLANK_CHOICE_DASH, CharField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import datetime, now
 
-class UserProfile(models.Model):
+class TravelProfile(models.Model):
 	
-	updated = models.DateTimeField(auto_now=True)
-	timestamp = models.DateTimeField(auto_now_add=True)
-	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
-	phone_number = models.CharField(max_length=15, null=True, blank=True)
-	address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
-	city = models.CharField(verbose_name="City",max_length=100, null=True, blank=True)
-	zip_code = models.CharField(verbose_name="Zippip Code",max_length=8, null=True, blank=True)
-	country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)
-
-	longitude = models.CharField(verbose_name="Longitude",max_length=50, null=True, blank=True)
-	latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
+    phone_number = models.CharField(max_length=15, null=True, blank=True)         
+    dob = models.DateField()
+    address = models.CharField(verbose_name="Address",max_length=100, null=True, blank=True)
+    city = models.CharField(verbose_name="City",max_length=100, null=True, blank=True)
+    zip_code = models.CharField(verbose_name="Zip Code",max_length=8, null=True, blank=True)
+    country = models.CharField(verbose_name="Country",max_length=100, null=True, blank=True)
 	
-	is_active = models.BooleanField(default = True)
+    longitude = models.CharField(verbose_name="Longitude",max_length=50, null=True, blank=True)
+    latitude = models.CharField(verbose_name="Latitude",max_length=50, null=True, blank=True)
+	
+    is_active = models.BooleanField(default = True)
+    
+    email_verified = models.BooleanField(default = False)
+    has_profile = models.BooleanField(default=False)
 
-	email_verified = models.BooleanField(default = False)
-	has_profile = models.BooleanField(default=False)
-
-	def __str__(self):
-		return f'{self.user}'
+    def __str__(self):
+	    return f'{self.user}'
 
 
 class UserToken(models.Model):
@@ -78,11 +79,11 @@ class Room(models.Model):
         return self.hotel.name
 
 class HotelBooking(models.Model):
-    # guest_name=models.CharField(max_length=200)
+    #guest_name=models.CharField(max_length=200)
     room = models.ForeignKey(Room,on_delete=models.CASCADE)
     guest = models.ForeignKey(Guest,on_delete=models.CASCADE)
     hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE)
-    checkin_date = models.DateTimeField(default=datetime.now())
+    checkin_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
     checkout_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
     check_out=  models.BooleanField(default=False)
     no_of_guests = models.IntegerField(default=1)
@@ -98,7 +99,6 @@ class HotelBooking(models.Model):
                 time_delta = self.checkout_date - self.checkin_date
                 total_time = time_delta.days
                 total_cost =total_time*self.room.rate
-                # return total_cost
                 return total_cost
         else:
             return 'calculated when checked out'
@@ -138,10 +138,10 @@ class FlightBooking(models.Model):
     passenger = models.ForeignKey(Passenger,on_delete=models.CASCADE)
     seating = models.ForeignKey(Seating,on_delete=models.CASCADE)
     no_of_passengers = models.IntegerField
-    departing_from = models.CharField(max_length=50)
+    departing_to = models.CharField(max_length=50)
     arriving_to = models.CharField(max_length=50)
-    leave_date = models.DateTimeField(default=datetime.now())
-    return_date = models.DateTimeField(default=datetime.now())
+    leave_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
+    return_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
     returning = models.BooleanField(default=False)
 
     def __str__(self):
@@ -160,30 +160,3 @@ class FlightBooking(models.Model):
         else:
             return 'calculated when returned'
     
-@receiver(post_save,sender=HotelBooking)
-def  RType(sender, instance, created, **kwargs):
-    room = instance.room
-    if created:
-        room.is_available = False
-    room.save()
-    if instance.check_out ==True:
-        room.is_available=True
-    room.save()    
-
-@receiver(post_save,sender=FlightBooking)
-def RType(sender, instance, created, **kwargs):
-    flight = instance.flight
-    if created:
-        flight.is_available = False
-    flight.save()
-    if instance.returning ==True:
-        flight.is_available=True
-    flight.save()
-    
-
-
-@receiver(post_save, sender=User)
-def update_profile_signal(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-    instance.user_profile.save()
